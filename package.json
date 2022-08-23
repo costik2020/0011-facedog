@@ -1,0 +1,19 @@
+{
+  "name": "0011-facedog",
+  "version": "1.0.0",
+  "description": "An app that compares cute pictures of dogs.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/costik2020/0011-facedog.git"
+  },
+  "author": "Constantin Luciu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/costik2020/0011-facedog/issues"
+  },
+  "homepage": "https://github.com/costik2020/0011-facedog#readme"
+}
