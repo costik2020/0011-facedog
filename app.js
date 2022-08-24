@@ -1,3 +1,5 @@
+
+/*
 console.log("dogs");
 
 
@@ -8,3 +10,8 @@ function greeting(){
 
 
 greeting();
+*/
+
+console.log("Lala land");
+
+
