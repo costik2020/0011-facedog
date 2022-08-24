@@ -1,3 +1,18 @@
+/*
+
+So what I want to do is this:
+- Make an api request to the third-pary api. From my server.
+- Then when I have that data, I can send it to the client side.
+- Make my own api and with an api end point (to stay within the CORS bountried..) I could use express for that
+- Test it, make a request from Postman to my api end point and see if it responsds.
+- Once that is working, when my api recives a request will make an request for a third party api
+- Wait for the response... (could use AJAX asynchrounous js..)
+- Then when the server recives the response from the third party api, use that to send it to my web page.
+- That should do the trick ;)
+
+*/
+
+
 const http = require('http');
 const fs = require('fs');
 
@@ -7,7 +22,7 @@ const fs = require('fs');
 const hostname = process.env.YOUR_HOST || '0.0.0.0';
 const port = process.env.PORT || 3000;
 
-fs.readFile('index.html', (err, html)=>{
+fs.readFile('./public/index.html', (err, html)=>{
 	if(err){
 		throw(err);
 	}else{
