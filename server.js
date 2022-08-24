@@ -2,7 +2,9 @@ const http = require('http');
 const fs = require('fs');
 
 
-const hostname = '127.0.0.1';
+//const hostname = '127.0.0.1';
+// Set the hostname and port to work with heroku
+const hostname = process.env.YOUR_HOST || '0.0.0.0';
 const port = process.env.PORT || 3000;
 
 fs.readFile('index.html', (err, html)=>{
