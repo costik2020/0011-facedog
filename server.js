@@ -12,7 +12,6 @@ So what I want to do is this:
 
 */
 
-
 // Get some necessary build-in modules
 const http = require('http');
 const https = require("https");
@@ -20,108 +19,124 @@ const fs = require('fs');
 const Stream = require("stream").Transform;
 
 
+// PAUSE PROJECT FOR NOW: THURSDAY 25 AUGUST 2022
+// TODO: Find a way to use async await or Promises
+// In a way that I can return the result from the dogs api to my client browser
+// From within  the server.js
+async function run (){
 
 
-// Set the hostname and port to work with heroku
-//const hostname = '127.0.0.1';
-const hostname = process.env.YOUR_HOST || '0.0.0.0';
-const port = process.env.PORT || 3000;
 
 
-// Third party API Address
-let apiEndPoint = "https://dog.ceo/api/breeds/image/random";
 
 
-// Define the Server
-const server = http.createServer((req, res) => {
-
-	// Request
-	console.log(" ");
-	console.log(" ");
-	console.log("REQUEST RECIVED");
+	// Set the hostname and port to work with heroku
+	//const hostname = '127.0.0.1';
+	const hostname = process.env.YOUR_HOST || '0.0.0.0';
+	const port = process.env.PORT || 3000;
 
 
-	console.log("req.url=", req.url);
+	// Third party API Address
+	let apiEndPoint = "https://dog.ceo/api/breeds/image/random";
+	let dogPicUrl = '';
+
+	// Define the Server
+	const server = http.createServer((req, res) => {
+
+		// Request
+		console.log(" ");
+		console.log(" ");
+		console.log("REQUEST RECIVED");
 
 
-	// Response
-
-	// Server the files
-
-	// Routing to the file
-    let path = 'public/';
-    switch(req.url) {
-      case '/':
-        path += 'index.html';
-        res.statusCode = 200;
-		res.setHeader('Content-Type', 'text/html');
-        break;
-      case '/public/js/main.js':
-        path += 'js/main.js';
-        res.statusCode = 200;
-		res.setHeader('Content-Type', 'application/javascript');
-        break;
-	 case '/whoLetTheDogsOut':
-	 	res.statusCode = 200;
-		// Call a third party api:
-		apiRequest(apiEndPoint);
-		res.end();
-	  	break;
-      default:
-        path += '404.html';
-        res.statusCode = 404;
-    }
+		console.log("req.url=", req.url);
 
 
-	// Check if I have a valid path
-	if (!(path==='public/')){
-		// send files
-		console.log("Before readFile() method:");
-		console.log("path=", path);
-		fs.readFile(path, (err, data) => {
-		  if (err) {
-			console.log(err);
+		// Response
+
+		// Server the files
+
+		// Routing to the file
+	    let path = 'public/';
+	    switch(req.url) {
+	      case '/':
+	        path += 'index.html';
+	        res.statusCode = 200;
+			res.setHeader('Content-Type', 'text/html');
+	        break;
+	      case '/public/js/main.js':
+	        path += 'js/main.js';
+	        res.statusCode = 200;
+			res.setHeader('Content-Type', 'application/javascript');
+	        break;
+		 case '/whoLetTheDogsOut':
+		 	res.statusCode = 200;
+			// Call a third party api:
+			dogPicUrl = apiRequest(apiEndPoint);
+			console.log("dogPicUrl=", dogPicUrl);
+			//res.write(dogPicUrl);
 			res.end();
-		  }
-		  res.write(data);
-		  res.end();
-		});
-	}
+		  	break;
+	      default:
+	        path += '404.html';
+	        res.statusCode = 404;
+	    }
+
+
+		// Check if I have a valid path
+		if (!(path==='public/')){
+			// send files
+			console.log("Before readFile() method:");
+			console.log("path=", path);
+			fs.readFile(path, (err, data) => {
+			  if (err) {
+				console.log(err);
+				res.end();
+			  }
+			  res.write(data);
+			  res.end();
+			});
+		}
 
 
 
 
-	// Listen for client fetch() request
-
-
-
-
-
-
-});
-
-
-
-
-// Start the server at the http://hostname:port specified
-server.listen(port, hostname, () => {
-	console.log("...................................................................");
-	console.log("Is run first!");
-	console.log(`Server running at http://${hostname}:${port}/`);
-
-});
-
+		// Listen for client fetch() request
 
 
 
 
 
+
+	});
+
+
+
+
+	// Start the server at the http://hostname:port specified
+	server.listen(port, hostname, () => {
+		console.log("...................................................................");
+		console.log("Is run first!");
+		console.log(`Server running at http://${hostname}:${port}/`);
+
+	});
+
+
+
+
+}
+
+
+run();
+
+
+///////////////////////////////////////////////////////////////////////////////////
 
 // Define functions
-function apiRequest(apiUrl){
+async function apiRequest(apiUrl){
 
 		//- Make an api request to the third-pary api. From my server.
-		https
+	  https
 		  .get(apiUrl, resp => {
 			let data = "";
 
@@ -134,15 +149,19 @@ function apiRequest(apiUrl){
 			resp.on("end", () => {
 			  let url = JSON.parse(data);
 			  console.log("Dog API end point url=",url);
+			  //res.write(url);
+			  //res.end();
+			  return url;
 			});
 
 		  })
 		  .on("error", err => {
 			console.log("Hmm something terible went wrong.");
 			console.log("Error: " + err.message);
+			return 0;
 		  });
 
-		  return 0;
+
 
 }
 
