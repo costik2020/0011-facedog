@@ -13,70 +13,88 @@ So what I want to do is this:
 */
 
 
+// Get some necessary build-in modules
 const http = require('http');
 const https = require("https");
 const fs = require('fs');
-
 const Stream = require("stream").Transform;
 
-//const hostname = '127.0.0.1';
+
+
+
 // Set the hostname and port to work with heroku
+//const hostname = '127.0.0.1';
 const hostname = process.env.YOUR_HOST || '0.0.0.0';
 const port = process.env.PORT || 3000;
 
 
 
 
+// Define the Server
+const server = http.createServer((req, res) => {
+
+	// Request
+	console.log("req.url=", req.url);
 
 
-fs.readFile('./public/index.html', (err, html)=>{
-	if(err){
-		throw(err);
-	}else{
-		const server = http.createServer((req, res) => {
+	// Response
+
+	// send html file
+	fs.readFile('./public/index.html', (err, html) => {
+	  if (err) {
+	    console.log(err);
+	    res.end();
+	  }
+
+	  res.statusCode = 200;
+	  //res.setHeader('Content-Type', 'text/plain');
+	  res.setHeader('Content-Type', 'text/html');
+	  res.write(html);
+	  res.end();
+
+	});
 
 
+	//- Make an api request to the third-pary api. From my server.
+	https
+	  .get("https://dog.ceo/api/breeds/image/random", resp => {
+		let data = "";
 
-
-
-
-		  res.statusCode = 200;
-		  //res.setHeader('Content-Type', 'text/plain');
-		  res.setHeader('Content-Type', 'text/html');
-		  res.write(html);
-		  res.end();
+		// A chunk of data has been recieved.
+		resp.on("data", chunk => {
+		  data += chunk;
 		});
 
-		server.listen(port, hostname, () => {
-		  console.log(`Server running at http://${hostname}:${port}/`);
-
-			  //- Make an api request to the third-pary api. From my server.
-			  https
-				.get("https://dog.ceo/api/breeds/image/random", resp => {
-				  let data = "";
-
-				  // A chunk of data has been recieved.
-				  resp.on("data", chunk => {
-					data += chunk;
-				  });
-
-				  // The whole response has been received. Print out the result.
-				  resp.on("end", () => {
-					let url = JSON.parse(data);
-					console.log("Dog API end point url=",url);
-				  });
-
-				})
-				.on("error", err => {
-				  console.log("Hmm something terible went wrong.");
-				  console.log("Error: " + err.message);
-				});
-	  
-
-
+		// The whole response has been received. Print out the result.
+		resp.on("end", () => {
+		  let url = JSON.parse(data);
+		  console.log("Dog API end point url=",url);
 		});
-	}
-} );
+
+	  })
+	  .on("error", err => {
+		console.log("Hmm something terible went wrong.");
+		console.log("Error: " + err.message);
+	  });
+
+
+
+
+
+
+});
+
+
+
+
+// Start the server at the http://hostname:port specified
+server.listen(port, hostname, () => {
+	console.log("Is run first!");
+	console.log(`Server running at http://${hostname}:${port}/`);
+
+});
+
+
 
 
 
