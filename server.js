@@ -10,6 +10,9 @@ So what I want to do is this:
 - Then when the server recives the response from the third party api, use that to send it to my web page.
 - That should do the trick ;)
 
+
+Note: you can visit this project on heroku :  
+https://facedog-0011.herokuapp.com/
 */
 
 // Get some necessary build-in modules
