@@ -34,25 +34,51 @@ const port = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
 
 	// Request
+	console.log(" ");
+	console.log(" ");
+	console.log("REQUEST RECIVED");
+
+
 	console.log("req.url=", req.url);
 
 
 	// Response
 
-	// send html file
-	fs.readFile('./public/index.html', (err, html) => {
-	  if (err) {
-	    console.log(err);
-	    res.end();
-	  }
+	// Server the files
 
-	  res.statusCode = 200;
-	  //res.setHeader('Content-Type', 'text/plain');
-	  res.setHeader('Content-Type', 'text/html');
-	  res.write(html);
-	  res.end();
+	// Routing to the file
+    let path = 'public/';
+    switch(req.url) {
+      case '/':
+        path += 'index.html';
+        res.statusCode = 200;
+		res.setHeader('Content-Type', 'text/html');
+        break;
+      case '/public/js/main.js':
+        path += 'js/main.js';
+        res.statusCode = 200;
+		res.setHeader('Content-Type', 'application/javascript');
+        break;
+      default:
+        path += '404.html';
+        res.statusCode = 404;
+    }
 
-	});
+
+	// send files
+	console.log("Before readFile() method:");
+	console.log("path=", path);
+    fs.readFile(path, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.end();
+      }
+      res.write(data);
+      res.end();
+    });
+
+
+	// Listen for client fetch() request
 
 
 	//- Make an api request to the third-pary api. From my server.

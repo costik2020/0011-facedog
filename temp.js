@@ -5,6 +5,23 @@
 
 ///////////////////////////////////////////////////////////
 
+// send html file
+fs.readFile('./public/index.html', (err, html) => {
+  if (err) {
+	console.log(err);
+	res.end();
+  }
+
+  res.statusCode = 200;
+  //res.setHeader('Content-Type', 'text/plain');
+  res.setHeader('Content-Type', 'text/html');
+  res.write(html);
+  res.end();
+
+});
+
+
+
 ///////////////////////////////////////////////////////////
 
 // Example of an API request (from inside a server)
